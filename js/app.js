@@ -63,12 +63,33 @@ class GreetingWidget {
         const dateStr = this.formatDate(this.currentTime);
         const greetingStr = this.getGreeting(this.currentTime.getHours());
         
+        // Get user name from localStorage, default is 'User'
+        const userName = localStorage.getItem('dashboard-user-name') || 'User';
+        
         this.container.innerHTML = `
-            <h2>${greetingStr}</h2>
+            <h2>${greetingStr}, <span class="user-name" title="Click to change name">${userName}</span></h2>
             <div class="time">${timeStr}</div>
             <div class="date">${dateStr}</div>
         `;
+
+        // Add event listener to change name when clicked
+        const nameElement = this.container.querySelector('.user-name');
+        if (nameElement) {
+            nameElement.style.cursor = 'pointer'; // Beri indikasi bisa diklik
+            nameElement.addEventListener('click', () => this.changeName());
+        }
     }
+
+    // New method to change name
+    changeName() {
+        const currentName = localStorage.getItem('dashboard-user-name') || 'User';
+        const newName = prompt('Whats your name?', currentName);
+    
+        if (newName !== null && newName.trim() !== '') {
+            localStorage.setItem('dashboard-user-name', newName.trim());
+            this.updateDisplay(); // Refresh tampilan setelah nama diubah
+    }
+}
 
     startClock() {
         this.updateDisplay();
@@ -780,7 +801,7 @@ class ThemeManager {
         
         // Update teks tombol
         if (this.toggleBtn) {
-            this.toggleBtn.innerHTML = this.theme === 'light' ? 'Dark Mode' : 'Light Mode';
+            this.toggleBtn.innerHTML = this.theme === 'light' ? '🌙' : '☀️';
         }
     }
 }
