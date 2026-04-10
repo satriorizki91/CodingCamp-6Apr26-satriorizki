@@ -1,2 +1,2 @@
-# CodingCamp-6Apr26-yamaroni
-A To-Do List Life Dashboard Project
+# CodingCamp-6Apr26-satriorizki
+A To-Do List Life Dashboard Project by Satrio Rizki for Revou CodingCamp
