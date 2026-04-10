@@ -752,10 +752,42 @@ class QuickLinks {
         // Cleanup if needed
     }
 }
+// Light/Dark Mode Class - Change theme into light/dark mode
+class ThemeManager {
+    constructor() {
+        this.theme = localStorage.getItem('dashboard-theme') || 'light';
+        this.toggleBtn = document.querySelector('#theme-toggle-btn');
+    }
 
+    init() {
+        // Terapkan tema yang tersimpan saat load
+        this.applyTheme();
+        
+        if (this.toggleBtn) {
+            this.toggleBtn.addEventListener('click', () => this.toggle());
+        }
+    }
+
+    toggle() {
+        this.theme = this.theme === 'light' ? 'dark' : 'light';
+        localStorage.setItem('dashboard-theme', this.theme);
+        this.applyTheme();
+    }
+
+    applyTheme() {
+        // Set atribut di level <html> atau <body>
+        document.documentElement.setAttribute('data-theme', this.theme);
+        
+        // Update teks tombol
+        if (this.toggleBtn) {
+            this.toggleBtn.innerHTML = this.theme === 'light' ? 'Dark Mode' : 'Light Mode';
+        }
+    }
+}
 // Dashboard Class - Coordinates all widgets
 class Dashboard {
     constructor() {
+        this.themeManager = new ThemeManager();
         this.greetingWidget = null;
         this.focusTimer = null;
         this.taskList = null;
@@ -763,6 +795,9 @@ class Dashboard {
     }
 
     init() {
+        //Initialize Theme Manager
+        this.themeManager.init();
+
         // Initialize Greeting Widget
         const greetingContainer = document.querySelector('#greeting-widget .greeting-content');
         if (greetingContainer) {
