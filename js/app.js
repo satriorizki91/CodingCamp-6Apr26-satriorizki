@@ -366,12 +366,36 @@ class TaskList {
         this.renderTasks();
     }
 
+    //New feature: Sort task    
+    sortTasks(criteria) {
+        switch (criteria) {
+            case 'alpha':
+                //Numeric sorting parameter    
+                this.tasks.sort((a, b) => a.text.localeCompare(b.text, undefined, { numeric: true, sensitivity: 'base'}));
+                break;
+            case 'status':
+                this.tasks.sort((a, b) => a.completed - b.completed);
+                break;
+            case 'newest':
+                this.tasks.sort((a, b) => b.createdAt - a.createdAt);
+                break;
+        }
+        this.renderTasks();
+    }
+
     render() {
         this.container.innerHTML = `
             <h3>Tasks</h3>
             <div class="task-input-container">
                 <input type="text" class="task-input" placeholder="Add a new task..." />
                 <button class="add-task-btn">Add</button>
+            
+                <select class="task-sort-select" style="padding: 5px; margin-top: 10px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-widget); color: var(--text-main);">
+                    <option value="newest">Newest First</option>
+                    <option value="alpha">A - Z</option>
+                    <option value="status">Uncompleted First</option>
+                </select>
+
                 <div class="error-message task-error" style="display: none;"></div>
             </div>
             <ul class="task-list"></ul>
@@ -454,6 +478,14 @@ class TaskList {
             // Clear error on input
             taskInput.addEventListener('input', () => {
                 this.clearError();
+            });
+        }
+
+        //Dropdown task Sorting
+        const sortSelect = this.container.querySelector('.task-sort-select');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                this.sortTasks(e.target.value);
             });
         }
 
